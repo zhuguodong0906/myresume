@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>朱国东 - 高级测试工程师</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#6B7280',
+                        accent: '#3B82F6',
+                        light: '#F3F4F6',
+                        dark: '#1F2937'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.6s ease-in-out;
+            }
+            .section-padding {
+                padding-top: clamp(1.5rem, 3vw, 2.5rem);
+                padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            }
+            .hover-scale {
+                transition: transform 0.3s ease;
+            }
+            .hover-scale:hover {
+                transform: scale(1.02);
+            }
+            .skill-rating {
+                transition: width 1s ease-out;
+            }
+            .skill-card {
+                transition: all 0.3s ease;
+            }
+            .skill-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+            .certificate-card {
+                transition: all 0.2s ease;
+            }
+            .certificate-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            .particles-bg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 0;
+            }
+            .particle {
+                position: absolute;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.2);
+                animation: float 6s infinite ease-in-out;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        /* 打印样式优化 */
+        @media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                background-color: #ffffff;
+                color: #000000;
+                font-size: 11pt;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .bg-gradient-to-r {
+                background: #165DFF !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .bg-primary {
+                background-color: #165DFF !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .bg-primary\/10 {
+                background-color: rgba(22, 93, 255, 0.1) !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .text-primary {
+                color: #165DFF !important;
+            }
+            .bg-gray-50 {
+                background-color: #F9FAFB !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .bg-gray-100 {
+                background-color: #F3F4F6 !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .shadow-md {
+                box-shadow: none !important;
+            }
+            .hover-scale {
+                transform: none !important;
+            }
+            .skill-rating {
+                transition: none !important;
+            }
+            .animate-fade-in {
+                animation: none !important;
+            }
+            .section-padding {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+            /* 打印时强制技能模块为左右结构 */
+            .skills-container {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+            }
+            /* 证书部分打印优化 */
+            .certificate-grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .particles-bg {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 text-dark">
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
+        <!-- 优化后的头部区域 -->
+        <header class="bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-lg p-6 md:p-8 mb-4 relative overflow-hidden">
+            <!-- 动态粒子背景 -->
+            <div class="particles-bg" id="particles-container"></div>
+            
+            <!-- 半透明圆形装饰 -->
+            <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
+                <!-- 左侧个人信息 -->
+                <div class="flex-1">
+                    <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-2 text-shadow">朱国东</h1>
+                    <p class="text-[clamp(1.1rem,2vw,1.3rem)] font-medium text-blue-100 mb-4 font-semibold">高级测试工程师</p>
+                    
+                    <!-- 联系方式 - 优化为一行显示 -->
+                    <div class="flex flex-wrap items-center gap-4 md:gap-6 mb-6">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-phone text-white"></i>
+                            </div>
+                            <span>188XXXXXXXX</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-envelope text-white"></i>
+                            </div>
+                            <span>55XXXXXXXX@qq.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-map-marker text-white"></i>
+                            </div>
+                            <span>期望工作地：广州</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">
+                                <i class="fa fa-clock-o text-white"></i>
+                            </div>
+                            <span>到岗时间：随时</span>
+                        </div>
+                    </div>
+                    <!-- 标签区域 -->
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm">10年软件测试经验</span>
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm">质量保障专家</span>
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm">测试管理专家</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 其余内容保持不变 -->
+        <main class="p-6 md:p-8">
+            <!-- 专业总结 -->
+            <section class="mb-8 animate-fade-in" style="margin-top: 1px; animation-delay: 0.1s">
+                <h2 class="text-[clamp(1.5rem,3vw,1.5rem)] font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">
+                    <i class="fa fa-user-circle mr-2"></i>个人优势
+                </h2>
+                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-primary hover-scale">
+                    <p class="text-sm text-gray-700">拥有10年软件测试经验，专注于质量保障、测试策略制定与效率提升，尤其在办公软件(WPS)领域经验深厚。精通测试理论与用例设计，熟练掌握Charles/Fiddler抓包分析、测试管理工具(TAPD/ONES/禅道)，具备产品思维和跨部门协作能力。已完成职业规划与技能深化（Python自动化框架、产品思维拓展），做好全面回归职场准备，渴望为新团队贡献力量。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-white p-3 rounded shadow-sm hover-scale">
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-2 rounded-full mr-3">
+                                    <i class="fa fa-tasks text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-primary">测试管理专家</h3>
+                                    <p class="text-sm text-gray-600">主导WPS365商业版等核心项目全流程测试，漏测率降低90%，版本交付成功率98%。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-3 rounded shadow-sm hover-scale">
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-2 rounded-full mr-3">
+                                    <i class="fa fa-bolt text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-primary">技术驱动提效</h3>
+                                    <p class="text-sm text-gray-600">精通Python，开发自动化工具提升检查效率80%，熟练运用SQL进行数据分析。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-3 rounded shadow-sm hover-scale">
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-2 rounded-full mr-3">
+                                    <i class="fa fa-cogs text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-primary">质量与效率优化者</h3>
+                                    <p class="text-sm text-gray-600">推动流程改进，提升代码合并效率50%，优化版本交付流程提升效率50%。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-3 rounded shadow-sm hover-scale">
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-2 rounded-full mr-3">
+                                    <i class="fa fa-users text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-primary">团队赋能者</h3>
+                                    <p class="text-sm text-gray-600">搭建团队知识库，组织培训交流，培养团队成员版本管理能力。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 工作经历 -->
+            <section class="mb-6 animate-fade-in" style="animation-delay: 0.2s">
+                <h2 class="text-[clamp(1.3rem,2.5vw,1.5rem)] font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">
+                    <i class="fa fa-briefcase mr-2"></i>工作经历
+                </h2>
+                
+                <!-- 工作经历1 -->
+                <div class="mb-5 bg-gray-50 p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">广州金山移动科技有限公司</h3>
+                        <span class="text-primary font-medium text-sm">2022.03 - 2024.07</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full font-semibold">高级测试经理</span>
+                        <span class="mx-1 text-gray-300">|</span>
+                        <span class="text-gray-600 text-sm">广州</span>
+                    </div>
+                    
+                    <ul class="list-disc list-inside space-y-1.5 text-gray-700 text-sm">
+                        <li><span class="font-semibold">任务管理与流程建设</span>：构建完善的版本测试流程及规范体系，<span class="text-primary font-bold">漏测率降低90%</span>，保障版本高质量准时交付。</li>
+                        <li><span class="font-semibold">版本管理</span>：负责WPS365商业版月度版本需求规划与测试统筹，<span class="text-primary font-bold">版本交付成功率98%</span>。</li>
+                        <li><span class="font-semibold">功能测试与质量保障</span>：运用专业用例设计方法，确保<span class="text-primary font-bold">需求按时交付率100%</span>。</li>
+                        <li><span class="font-semibold">效率提升与工具开发</span>：推动改进方案，<span class="text-primary font-bold">代码合并效率提升50%</span>；开发交付检查工具，<span class="text-primary font-bold">效率与正确率提升80%</span>。</li>
+                        <li><span class="font-semibold">数据分析驱动质量</span>：运用SQL分析用户反馈与版本数据，安排专项测试提升质量，负责核心数据日报自动化推送。</li>
+                        <li><span class="font-semibold">团队赋能</span>：搭建团队知识库，组织10余次培训交流，培养团队成员能力。</li>
+                    </ul>
+                </div>
+                
+                <!-- 工作经历2 -->
+                <div class="mb-5 bg-gray-50 p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">广州金山移动科技有限公司</h3>
+                        <span class="text-primary font-medium text-sm">2014.05 - 2022.02</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full font-semibold">系统测试经理</span>
+                        <span class="mx-1 text-gray-300">|</span>
+                        <span class="text-gray-600 text-sm">广州</span>
+                    </div>
+                    
+                    <ul class="list-disc list-inside space-y-1.5 text-gray-700 text-sm">
+                        <li><span class="font-semibold">版本管理：</span>担任WPS2016版本负责人，负责版本需求收集、版本定义与测试计划执行，<span class="text-primary font-bold">保障版本按时交付率100%</span>。</li>
+                        <li><span class="font-semibold">功能测试：</span>负责WPS客户端新功能测试，参与需求评审，制定测试计划与用例，保障新功能按时按质发布。</li>
+                        <li><span class="font-semibold">质量管理：</span>建立BUG跟踪机制，定期分析，挖掘潜在问题并反馈，有效降低软件缺陷率。</li>
+                    </ul>
+                </div>
+                
+                <!-- 工作经历3 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">珠海金山办公软件有限公司</h3>
+                        <span class="text-primary font-medium text-sm">2012.01 - 2014.04</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full font-semibold">系统测试工程师</span>
+                        <span class="mx-1 text-gray-300">|</span>
+                        <span class="text-gray-600 text-sm">珠海</span>
+                    </div>
+                    
+                    <ul class="list-disc list-inside space-y-1.5 text-gray-700 text-sm">
+                        <li><span class="font-semibold">功能测试：</span>主导WPS文字组件新功能测试，提出改进建议（采纳率80%）。</li>
+                        <li><span class="font-semibold">质量管理：</span>建立BUG跟踪机制，分析用户反馈协助优化产品。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 项目经历 -->
+            <section class="mb-6 animate-fade-in" style="animation-delay: 0.3s">
+                <h2 class="text-[clamp(1.3rem,2.5vw,1.5rem)] font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">
+                    <i class="fa fa-code-fork mr-2"></i>项目经历
+                </h2>
+                
+                <!-- 项目1 -->
+                <div class="mb-5 bg-gray-50 p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">WPS365商业版测试项目</h3>
+                        <span class="text-primary font-medium text-sm">2023.08 - 2024.07</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full font-semibold">商业版测试负责人</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">目标/挑战</h4>
+                            <p class="text-xs">构建标准缺失、交付流程不完善</p>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">职责与行动</h4>
+                            <p class="text-xs">建立测试规范体系，开发自动化工具</p>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">成果</h4>
+                            <p class="text-xs">交付流程效率提升50%，检查效率提升80%</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-700 text-sm">项目初期面临构建标准缺失、交付流程不完善挑战，需从零建立体系保障核心商业产品高质量迭代。主导版本规划与定义，建立测试规范体系；梳理并制定清晰交付流程与标准，输出打包教程；使用Python开发自动化检查工具。</p>
+                </div>
+                
+                <!-- 项目2 -->
+                <div class="mb-5 bg-gray-50 p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">WPS多账号项目</h3>
+                        <span class="text-primary font-medium text-sm">2022.06 - 2022.10</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full font-semibold">云业务测试负责人</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">目标/挑战</h4>
+                            <p class="text-xs">实现WPS多账号登录功能</p>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">职责与行动</h4>
+                            <p class="text-xs">确定测试范围，制定计划与用例</p>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">成果</h4>
+                            <p class="text-xs">按时高质量上线，规则文档复用率达70%</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-700 text-sm">实现WPS多账号登录功能，需应对复杂用户场景和交互逻辑调整。确定测试范围，制定计划与用例；深入挖掘需求，梳理规则文档；密切跨团队协作；制定上线监控方案。</p>
+                </div>
+                
+                <!-- 项目3 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">WPS新插件平台重构项目</h3>
+                        <span class="text-primary font-medium text-sm">2021.04 - 2022.02</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full font-semibold">项目负责人</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">目标/挑战</h4>
+                            <p class="text-xs">重构构建慢、维护成本高的旧平台</p>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">职责与行动</h4>
+                            <p class="text-xs">梳理需求痛点，规划新平台功能</p>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded">
+                            <h4 class="text-sm font-medium text-gray-500 mb-1 font-semibold">成果</h4>
+                            <p class="text-xs">成功完成平台重构并上线</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-700 text-sm">重构构建慢、维护成本高的旧插件平台。梳理需求痛点，规划新平台功能；制定测试规划，克服资源紧张按时完成；策划上线前体验活动，制定上线计划。</p>
+                </div>
+            </section>
+
+            <!-- 专业技能 -->
+            <section class="mb-6 animate-fade-in" style="animation-delay: 0.4s">
+                <h2 class="text-[clamp(1.3rem,2.5vw,1.5rem)] font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">
+                    <i class="fa fa-wrench mr-2"></i>专业技能
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- 技术技能 -->
+                    <div class="bg-white p-5 rounded-xl shadow-md hover-scale">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-code text-primary text-lg"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-dark">技术技能</h3>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- 测试理论与方法 -->
+                            <div class="p-3 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-primary mb-2 text-sm">测试理论与方法</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div class="flex items-center text-xs">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></div>
+                                        <span>测试策略/计划</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></div>
+                                        <span>用例设计</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></div>
+                                        <span>版本管理</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></div>
+                                        <span>质量管理</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></div>
+                                        <span>灰度/A-B测试</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 测试技术与工具 -->
+                            <div class="p-3 bg-blue-50 rounded-lg">
+                                <h4 class="font-semibold text-primary mb-2 text-sm">测试技术与工具</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium text-xs">Python</span>
+                                            <span class="text-primary font-medium text-xs">90%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div class="skill-rating bg-primary h-1.5 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium text-xs">SQL</span>
+                                            <span class="text-primary font-medium text-xs">90%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div class="skill-rating bg-primary h-1.5 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium text-xs">Charles/Fiddler</span>
+                                            <span class="text-primary font-medium text-xs">85%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div class="skill-rating bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium text-xs">Selenium/Pytest</span>
+                                            <span class="text-primary font-medium text-xs">75%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div class="skill-rating bg-primary h-1.5 rounded-full" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium text-xs">JMeter</span>
+                                            <span class="text-primary font-medium text-xs">60%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div class="skill-rating bg-primary h-1.5 rounded-full" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 测试管理工具 -->
+                    <div class="bg-white p-5 rounded-xl shadow-md hover-scale">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-tasks text-primary text-lg"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-dark">测试管理工具</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="p-3 bg-blue-50 rounded-lg shadow-sm flex flex-col items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center mb-2">
+                                    <i class="fa fa-trello text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">TAPD</h4>
+                            </div>
+                            
+                            <div class="p-3 bg-blue-50 rounded-lg shadow-sm flex flex-col items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center mb-2">
+                                    <i class="fa fa-calendar-check-o text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">ONES</h4>
+                            </div>
+                            
+                            <div class="p-3 bg-blue-50 rounded-lg shadow-sm flex flex-col items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center mb-2">
+                                    <i class="fa fa-bug text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">禅道</h4>
+                            </div>
+                            
+                            <div class="p-3 bg-blue-50 rounded-lg shadow-sm flex flex-col items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center mb-2">
+                                    <i class="fa fa-git text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">Git</h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 软技能 -->
+                    <div class="bg-white p-5 rounded-xl shadow-md hover-scale">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-users text-primary text-lg"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-dark">软技能</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm hover-scale">
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 mx-auto">
+                                    <i class="fa fa-comments text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">跨部门协作</h4>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm hover-scale">
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 mx-auto">
+                                    <i class="fa fa-users text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">团队管理</h4>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm hover-scale">
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 mx-auto">
+                                    <i class="fa fa-cogs text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">流程优化</h4>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm hover-scale">
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 mx-auto">
+                                    <i class="fa fa-search text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">需求分析</h4>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm hover-scale">
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 mx-auto">
+                                    <i class="fa fa-lightbulb-o text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">产品思维</h4>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm hover-scale">
+                                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 mx-auto">
+                                    <i class="fa fa-bar-chart text-primary"></i>
+                                </div>
+                                <h4 class="text-center text-sm">数据分析</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 教育背景 -->
+            <section class="mb-6 animate-fade-in" style="animation-delay: 0.5s">
+                <h2 class="text-[clamp(1.3rem,2.5vw,1.5rem)] font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">
+                    <i class="fa fa-graduation-cap mr-2"></i>教育背景
+                </h2>
+                
+                <div class="bg-white p-4 rounded-lg shadow-md hover-scale">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-dark">广东科学技术职业学院</h3>
+                        <span class="text-primary font-medium text-sm">2008.09 - 2011.06</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="bg-primary/10 text-primary text-sm font-medium px-2 py-0.5 rounded-full">软件技术（统招）</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 技能证书 -->
+            <section class="animate-fade-in" style="animation-delay: 0.6s">
+                <h2 class="text-[clamp(1.3rem,2.5vw,1.5rem)] font-bold text-primary border-b-2 border-primary/20 pb-2 mb-4">
+                    <i class="fa fa-certificate mr-2"></i>技能证书
+                </h2>
+                
+                <div class="certificate-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="certificate-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-trophy text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">KOS大师证书</h3>
+                                <p class="text-xs text-gray-500">金山办公技能认证</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-600">
+                            <p>具备深入的WPS办公软件技术能力和专业知识</p>
+                        </div>
+                    </div>
+                    
+                    <div class="certificate-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-code text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">软件工程师中级</h3>
+                                <p class="text-xs text-gray-500">程序员证书</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-600">
+                            <p>软件开发与测试的专业技术能力</p>
+                        </div>
+                    </div>
+                    
+                    <div class="certificate-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-language text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">EPTIP一级</h3>
+                                <p class="text-xs text-gray-500">IT职业英语</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-600">
+                            <p>IT领域专业英语应用能力</p>
+                        </div>
+                    </div>
+                    
+                    <div class="certificate-card bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-book text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">CET4</h3>
+                                <p class="text-xs text-gray-500">大学英语四级</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-600">
+                            <p>基础英语应用能力</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-primary text-white py-4 px-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between">
+                <div class="text-sm mb-3 md:mb-0">
+                    <p>© 2025 朱国东 - 高级测试工程师  | 感谢您的阅读！期待有机会为贵公司贡献力量，与您共创卓越产品质量。</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                        <i class="fa fa-linkedin-square text-xl"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors">
+                        <i class="fa fa-envelope text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 页面滚动动画 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 监听滚动事件，为元素添加动画
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // 为所有需要动画的元素添加观察器
+            document.querySelectorAll('section > div').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // 技能条动画
+            const skillRatings = document.querySelectorAll('.skill-rating');
+            const skillObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target;
+                        const width = bar.style.width;
+                        bar.style.width = '0';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 300);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            skillRatings.forEach(bar => {
+                skillObserver.observe(bar);
+            });
+            
+            // 创建动态粒子背景
+            createParticleBackground();
+        });
+        
+        // 创建粒子背景
+        function createParticleBackground() {
+            const container = document.getElementById('particles-container');
+            if (!container) return;
+            
+            // 清除可能存在的旧粒子
+            container.innerHTML = '';
+            
+            // 创建50个随机粒子
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机大小
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // 随机位置
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // 随机透明度
+                particle.style.opacity = (Math.random() * 0.5 + 0.2).toString();
+                
+                // 随机动画延迟和持续时间
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+    </script>
+</body>
+</html>
